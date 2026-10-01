@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MC Tools</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">
+            RGMC<span>tools</span>
+            <small>Stworzone przez Misiu3</small>
+        </div>
+
+  <nav>
+    <a href="home.html">Główna</a>
+    <a href="kalkulatory.html">Kalkulatory</a>
+    <a href="narzedzia.html">Narzędzia</a>
+    <a href="onas.html?">O stronie</a>
+</nav>
+    </header>
+
+    <section class="hero">
+        <h1>RGMC<span>tools</span></h1>
+        <p>Przydatne rzeczy dla graczy RGMC.pl</p>
+    </section>
+
+    <main class="tools" id="kalkulatory">
+
+        <h2>🧮 Kalkulatory</h2>
+
+        <!-- KALKULATOR SPAWNERÓW -->
+        <div class="card">
+            <h3>🧱 Kalkulator spawnerów</h3>
+
+            <p>
+                Sprawdź, ile możesz zarobić ze swoich spawnerów.
+            </p>
+
+            <input
+                type="number"
+                id="spawners"
+                placeholder="Liczba spawnerów"
+            >
+
+            <input
+                type="number"
+                id="profit"
+                placeholder="Zarobek z 1 spawnera / min"
+            >
+
+            <button onclick="calculate()">
+                OBLICZ ZAROBEK
+            </button>
+
+            <div class="result" id="result"></div>
+            <div class="result" id="hourResult"></div>
+            <div class="result" id="dayResult"></div>
+        </div>
+
+        <!-- KALKULATOR INWESTYCJI -->
+        <div class="card">
+            <h3>💰 Kalkulator inwestycji</h3>
+
+            <p>
+                Sprawdź, ile przedmiotów możesz kupić za swój budżet.
+            </p>
+
+            <input
+                type="number"
+                id="money"
+                placeholder="Twój budżet"
+            >
+
+            <input
+                type="number"
+                id="price"
+                placeholder="Cena jednego spawnera"
+            >
+
+            <button onclick="calculateInvestment()">
+                OBLICZ
+            </button>
+
+            <div class="result" id="investmentResult"></div>
+        </div>
+
+        <!-- KALKULATOR STACKÓW -->
+        <div class="card">
+            <h3>📦 Kalkulator stacków</h3>
+
+            <p>
+                Sprawdź, ile stacków spawnerów posiadasz.
+            </p>
+
+            <input
+                type="number"
+                id="stackSpawners"
+                placeholder="Liczba spawnerów"
+            >
+
+            <button onclick="calculateStacks()">
+                OBLICZ STACKI
+            </button>
+
+            <div class="result" id="stackResult"></div>
+        </div>
+
+        <!-- KALKULATOR ZWROTU -->
+        <div class="card">
+            <h3>⏱️ Kalkulator zwrotu inwestycji</h3>
+
+            <p>
+                Sprawdź, ile czasu potrzeba na zwrot inwestycji.
+            </p>
+
+            <input
+                type="number"
+                id="investment"
+                placeholder="Kwota inwestycji"
+            >
+
+            <input
+                type="number"
+                id="incomePerMinute"
+                placeholder="Zarobek / min"
+            >
+
+            <button onclick="calculatePayback()">
+                OBLICZ ZWROT
+            </button>
+
+            <div class="result" id="paybackResult"></div>
+        </div>
+
+    </main>
+
+    <script>
+
+        // KALKULATOR SPAWNERÓW
+        function calculate() {
+
+            const spawners = Number(
+                document.getElementById("spawners").value
+            );
+
+            const profit = Number(
+                document.getElementById("profit").value
+            );
+
+            if (spawners < 0 || profit < 0) {
+                document.getElementById("result").innerText =
+                    "Podaj prawidłowe wartości.";
+                return;
+            }
+
+            const perMinute = spawners * profit;
+            const perHour = perMinute * 60;
+            const perDay = perHour * 24;
+
+            document.getElementById("result").innerText =
+                "💰 Zarobek: " +
+                perMinute.toLocaleString("pl-PL") +
+                " $ / min";
+
+            document.getElementById("hourResult").innerText =
+                "⏱️ Na godzinę: " +
+                perHour.toLocaleString("pl-PL") +
+                " $";
+
+            document.getElementById("dayResult").innerText =
+                "📅 Na 24 godziny: " +
+                perDay.toLocaleString("pl-PL") +
+                " $";
+        }
+
+
+        // KALKULATOR INWESTYCJI
+        function calculateInvestment() {
+
+            const money = Number(
+                document.getElementById("money").value
+            );
+
+            const price = Number(
+                document.getElementById("price").value
+            );
+
+            if (money < 0 || price <= 0) {
+                document.getElementById("investmentResult").innerText =
+                    "Podaj prawidłowe wartości.";
+                return;
+            }
+
+            const amount = Math.floor(money / price);
+
+            document.getElementById("investmentResult").innerText =
+                "🧱 Możesz kupić: " +
+                amount.toLocaleString("pl-PL") +
+                " spawnerów";
+        }
+
+
+        // KALKULATOR STACKÓW
+        function calculateStacks() {
+
+            const spawners = Number(
+                document.getElementById("stackSpawners").value
+            );
+
+            if (spawners < 0) {
+                document.getElementById("stackResult").innerText =
+                    "Podaj prawidłową liczbę.";
+                return;
+            }
+
+            const stacks = Math.floor(spawners / 64);
+            const remainder = spawners % 64;
+
+            document.getElementById("stackResult").innerText =
+                "📦 Stacki: " +
+                stacks.toLocaleString("pl-PL") +
+                " | Reszta: " +
+                remainder;
+        }
+
+
+        // KALKULATOR ZWROTU INWESTYCJI
+        function calculatePayback() {
+
+            const investment = Number(
+                document.getElementById("investment").value
+            );
+
+            const incomePerMinute = Number(
+                document.getElementById("incomePerMinute").value
+            );
+
+            if (investment <= 0 || incomePerMinute <= 0) {
+                document.getElementById("paybackResult").innerText =
+                    "Podaj prawidłowe wartości.";
+                return;
+            }
+
+            const minutes = investment / incomePerMinute;
+            const hours = minutes / 60;
+            const days = hours / 24;
+
+            document.getElementById("paybackResult").innerText =
+                "💸 Zwrot po około " +
+                minutes.toLocaleString("pl-PL", {
+                    maximumFractionDigits: 1
+                }) +
+                " min (" +
+                hours.toLocaleString("pl-PL", {
+                    maximumFractionDigits: 1
+                }) +
+                " h / " +
+                days.toLocaleString("pl-PL", {
+                    maximumFractionDigits: 2
+                }) +
+                " dni)";
+        }
+
+    </script>
+
+</body>
+<a href="https://discord.gg/khkUrMJMb" target="_blank" class="discord-button">
+    💬 DISCORD
+</a>
+</html>
